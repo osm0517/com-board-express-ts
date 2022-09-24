@@ -1,0 +1,46 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: 게시판 만들기 API
+  description: 사이드 프로젝트...
+  license:
+    name: 개발자
+servers:
+  - url: http://localhost:8002/api
+paths:
+  /api/user:
+    get:
+      tags:
+        - user
+      summary: 유저 생성 API
+      description: Local 유저 생성
+      operationId: localUserSave
+      parameters:
+        - email: email
+          password: password
+          name: name
+          description: 이메일, 패스워드, 이름으로 회원가입
+          required: true
+          schema:
+            type: string
+      responses:
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        idx:
+          type: integer
+          format: int64
+          example: 10
+        email:
+          type: string
+          example: admin@gmail.com
+        password:
+          type: string
+          example: 1234
+        name:
+          type: string
+          description: 유저의 이름
+          example: 김인후
