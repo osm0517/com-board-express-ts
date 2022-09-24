@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const userService = require("./user.service")
 
-router.get("/", userService.test)
+router.post("/", userService.localSave)
 
 module.exports = router
 export {}
