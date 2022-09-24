@@ -1,6 +1,13 @@
 # Project
 
-### Project 실행
+### Where Is API DOCS?
+```
+Project Run
+
+url/api-docs
+```
+
+### How Run Project??
 
 ```
 git clone
@@ -12,4 +19,9 @@ npm install
 config/sequelizeConfig.ts 파일 추가
 
 npm run dev
+```
+
+### What Use Stack
+```
+Typescript, Node.js, Express, Maria DB, Sequelize, Swagger
 ```
