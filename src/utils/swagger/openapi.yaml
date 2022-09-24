@@ -1,20 +1,20 @@
 openapi: '3.0.0'
 info:
   version: 1.0.0
-  title: DMU Gamja TEAM의 API docs
-  description: 동양미래대학교 졸업 작품 GAMJA의 API 문서 입니다.
+  title: 게시판 만들기 API
+  description: 사이드 프로젝트...
   license:
-    name: MIT
+    name: 개발자
 servers:
-  - url: http://localhost:3000/api
+  - url: http://localhost:8002/api
 paths:
   /api/user:
-    post:
+    get:
       tags:
         - user
-      summary: Create Local user
-      description: 로컬 서비스 이용자 회원가입
-      operationId: localUserCreate
+      summary: 유저 생성 API
+      description: Local 유저 생성
+      operationId: localUserSave
       parameters:
         - email: email
           password: password
@@ -24,34 +24,6 @@ paths:
           schema:
             type: string
       responses:
-  /api/user/local:
-    post:
-      tags:
-        - user
-      summary: Login Local User
-      description: 로컬 서비스 로그인
-      operationId: localUserLogin
-      parameters:
-        - email: email
-          password: password
-          description: 이메일과 패스워드 로그인
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Invalid username supplied
-        '404':
-          description: User not found
 
 components:
   schemas:
@@ -64,92 +36,11 @@ components:
           example: 10
         email:
           type: string
-          example: inhoo987654321@gmail.com
+          example: admin@gmail.com
         password:
           type: string
-          example: qwer1595@!
+          example: 1234
         name:
           type: string
           description: 유저의 이름
           example: 김인후
-    Gamja:
-      type: object
-      properties:
-        idx:
-          type: integer
-          format: int64
-          example: 10
-        name:
-          type: string
-          example: 맥도날드감자튀김
-        exp:
-          type: integer
-          example: 350
-        userIdx:
-          type: integer
-          description: User의 PK값을 FK 사용
-          example: 1
-    Board:
-      type: object
-      properties:
-        idx:
-          type: integer
-          format: int64
-          example: 10
-        title:
-          type: string
-          example: 집 가고 싶다.
-        text:
-          type: string
-          example: 오늘따라 매우 집 가고 싶다.
-        userIdx:
-          type: integer
-          description: User의 PK값을 FK 사용
-          example: 1
-    Recode:
-      type: object
-      properties:
-        idx:
-          type: integer
-          format: int64
-          example: 10
-        menu:
-          type: string
-          example: 당근
-        kcal:
-          type: double
-          example: 30.5
-        userIdx:
-          type: integer
-          description: User의 PK값을 FK 사용
-          example: 1
-    UserInfo:
-      type: object
-      properties:
-        idx:
-          type: integer
-          format: int64
-          example: 10
-        birth:
-          type: DATETIME
-          example: 2022-12-13
-        gender:
-          type: boolean
-          description: true 남자, false 여자
-          example: false
-        userIdx:
-          type: integer
-          description: User의 PK값을 FK 사용
-          example: 1
-    ApiResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        type:
-          type: string
-        message:
-          type: string
-      xml:
-        name: '##default'
