@@ -3,4 +3,6 @@ export interface UserAttributes {
   email: string
   password: string
   name: string
-}
+  id: string
+  salt: string
+};
