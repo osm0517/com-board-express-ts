@@ -3,10 +3,11 @@ import sequelize from "../index"
 import { UserAttributes } from "../interface/User"
 
 export class User extends Model<UserAttributes> {
-  public readonly idx!: number
+  public readonly id!: number
   public email!: string
   public password!: string
   public name!: string
+  public nickname!: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -16,22 +17,26 @@ export class User extends Model<UserAttributes> {
 
 User.init(
   {
-    idx: {
+    id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
     email: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(120),
       unique: true,
       allowNull: false,
     },
     password: {
-      type: DataTypes.STRING(120),
+      type: DataTypes.STRING(150),
       allowNull: false,
     },
     name: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    nickname: {
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
   },

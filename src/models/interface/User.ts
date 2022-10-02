@@ -1,6 +1,7 @@
 export interface UserAttributes {
-  idx?: number
+  id?: number
   email: string
   password: string
   name: string
+  nickname: string
 }
