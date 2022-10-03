@@ -8,7 +8,6 @@ export class Comment extends Model<CommentAttributes> {
   public readonly id!: number
   public readonly userId!: number
   public readonly boardId!: number
-  public readonly text!: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -32,10 +31,6 @@ Comment.init(
     },
     boardId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    text: {
-      type: DataTypes.TEXT(),
       allowNull: false,
     },
   },
