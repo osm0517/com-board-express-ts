@@ -25,8 +25,8 @@ const process = {
       const salt = crypto.randomBytes(128).toString('base64');
       const hashPassword:any = crypto.createHash('sha512').update(password + salt).digest('hex');
       password = hashPassword;
-      const user = await User.create({ email, password, name, id, salt })
-      res.status(200).json(user)
+      // const user = await User.create({ email, password, name, id, salt })
+      // res.status(200).json(user)
     } catch (err) {
       res.status(400).json({ message: "BAD_REQUEST => ", err })
     }
@@ -101,6 +101,10 @@ const process = {
       res.status(400).json({ message: "BAD_REQUEST" })
     }
   },
+}
+
+module.exports = {
+  process,
 }
 
 module.exports = {

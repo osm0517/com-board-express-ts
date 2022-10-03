@@ -1,5 +1,8 @@
 export interface BoardAttributes {
-    idx?:Number
-    title: string
-    writer: string
-  };
+  id?: number
+  userId?: number
+  categoryId?: number
+  stackId?: number
+  title: string
+  text: string
+}

@@ -1,10 +1,19 @@
 # Project
 
 ### Where Is API DOCS?
+
 ```
 Project Run
 
 url/api-docs
+```
+
+### How Run Project??
+
+```
+add Sequelize Config
+
+npm run db
 ```
 
 ### How Run Project??
@@ -22,6 +31,7 @@ npm run dev
 ```
 
 ### What Use Stack
+
 ```
 Typescript, Node.js, Express, Maria DB, Sequelize, Swagger
 ```

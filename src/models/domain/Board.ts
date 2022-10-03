@@ -1,40 +1,92 @@
-import { DataTypes, Model } from "sequelize"
+import { Association, DataTypes, Model } from "sequelize"
 import sequelize from "../index"
 import { BoardAttributes } from "../interface/Board"
+import { Category } from "./Board_Category"
+import { Stack } from "./Stack"
+import { User } from "./User"
 
 export class Board extends Model<BoardAttributes> {
-  public readonly idx!: number
-  public title!: string
-  public writer!: string
+  public readonly id!: number
+  public readonly userId!: number
+  public readonly categoryId!: number
+  public readonly stackId!: number
+  public readonly title!: string
+  public readonly text!: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
 
-  public static associations: {};
-  
+  public static associations: {
+    userBoard: Association<Board, User>
+    stackBoard: Association<Board, Stack>
+    categoryBoard: Association<Board, Category>
+  }
 }
 
 Board.init(
   {
-    idx: {
+    id: {
       type: DataTypes.INTEGER,
-      //autoIncrement는 숫자를 하나씩 증가하며 index를 표시해줌
-      //나중에 게시판의 내용과 연결해주도록 함.
       autoIncrement: true,
       primaryKey: true,
     },
-    title: {
-      type: DataTypes.STRING(50),
+    userId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    writer: {
-      type: DataTypes.STRING(50),
+    stackId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    categoryId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    title: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    text: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   },
   {
-    tableName: "board_information_tb",
+    modelName: "Board",
+    tableName: "tbl_board",
     sequelize,
     freezeTableName: true,
   }
 )
+User.hasMany(Board, {
+  sourceKey: "id",
+  foreignKey: "userId",
+  as: "userBoard",
+})
+
+Board.belongsTo(User, {
+  foreignKey: "userId",
+  as: "userBoard",
+})
+
+Category.hasMany(Board, {
+  sourceKey: "id",
+  foreignKey: "categoryId",
+  as: "categoryBoard",
+})
+
+Board.belongsTo(Category, {
+  foreignKey: "categoryId",
+  as: "categoryBoard",
+})
+
+Stack.hasMany(Board, {
+  sourceKey: "id",
+  foreignKey: "stackId",
+  as: "stackBoard",
+})
+
+Board.belongsTo(User, {
+  foreignKey: "stackId",
+  as: "stackBoard",
+})
