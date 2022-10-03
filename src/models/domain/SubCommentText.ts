@@ -1,36 +1,34 @@
 import { Association, DataTypes, Model } from "sequelize"
 import sequelize from "../index"
-import { SubCommentAttributes } from "../interface/Sub_Comment"
-import { Comment } from "./Comment"
-import { User } from "./User"
+import { SubCommentTextAttributes } from "../interface/Sub_Comment_Text"
+import { SubComment } from "./SubComment"
 
-export class SubComment extends Model<SubCommentAttributes> {
+export class SubCommentText extends Model<SubCommentTextAttributes> {
   public readonly id!: number
-  public readonly userId!: number
-  public readonly commentId!: number
+  public readonly subCommentId!: number
+  public readonly text!: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
 
   public static associations: {
-    userSub: Association<SubComment, User>
-    commentSub: Association<SubComment, Comment>
+    commentSubText: Association<SubCommentText, SubComment>
   }
 }
 
-SubComment.init(
+SubCommentText.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    userId: {
+    subCommentId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    commentId: {
-      type: DataTypes.INTEGER,
+    text: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
@@ -42,24 +40,13 @@ SubComment.init(
   }
 )
 
-User.hasMany(SubComment, {
+SubComment.hasMany(SubCommentText, {
   sourceKey: "id",
-  foreignKey: "userId",
-  as: "userSub",
+  foreignKey: "subCommentId",
+  as: "userSubId",
 })
 
-SubComment.belongsTo(User, {
-  foreignKey: "userId",
-  as: "userSub",
-})
-
-Comment.hasMany(SubComment, {
-  sourceKey: "id",
-  foreignKey: "commentId",
-  as: "commentSub",
-})
-
-SubComment.belongsTo(Comment, {
-  foreignKey: "commentId",
-  as: "commentSub",
+SubCommentText.belongsTo(SubComment, {
+  foreignKey: "subCommentId",
+  as: "userSubId",
 })
