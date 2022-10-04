@@ -53,11 +53,15 @@ const process = {
 
       await User.create({ email, password, name, nickname, salt })
       .then(console.log)
-      .then(v => res.status(200).json(v))
+      // .then(v => res.status(200).json({
+      //   success : true,
+      //   msg : "아이디 생성 성공함",
+      //   value : v
+      // }))
       .catch(v => {
         console.log("db에 user 정보를 생성 중 err발생 => \n" + v);
         res.status(400).json({
-          success : true,
+          success : false,
           msg : "db에 계정을 생성 중 err 발생",
           value : v
         })
