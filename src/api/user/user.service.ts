@@ -1,34 +1,69 @@
 import { Request, Response } from "express";
 import { User } from "../../models/domain/User";
-import { Board } from "../../models/domain/Board";
-import sequelize from "../../models";
 const crypto = require('crypto');
 
+const createSalt = ():Promise<string> => {
+  return new Promise((res, rej) => {
+    crypto.randomBytes(256, (err:String, buf:any)=>{
+      if(err) {
+          console.log(err);
+          rej(err);
+      }
+      res(buf.toString('base64'));
+    })
+  })
+};
 
+const createHashPassword = (pwd:String, salt:String, len:Number, iteration:Number):Promise<string> => {
+  return new Promise(async (res, rej) => {
+    crypto.pbkdf2(pwd, salt, iteration, len, 'sha512', (err:String, key:any) => {
+      if (err) rej(err);
+      res(key.toString('base64'));
+    });
+  });
+};
 
 const process = {
   signup : async (req:Request, res:Response) => {
     try {
-      let { email, password, name, id } = req.body
+      let { email, inputPassword, name, nickname } = req.body
       try {
+        //동일한 아이디가 있는지 확인
         const emailVal = await User.findAll({
           where : {email : email}
         })
-        const idVal = await User.findAll({
-          where : {id : id}
-        })
-        if(emailVal[0]) return res.status(200).json(emailVal)
-        if(emailVal[0]) return res.status(200).json(idVal)
+        //동일한 아이디가 확인이 되면 return으로 흐름이 끊김.
+        //연산의 결과로는 success로 불린 값을 전송함
+        if(emailVal[0]) return res.status(200).json({
+          success : false,
+          msg : "db에 동일한 이메일이 존재함",
+          value : emailVal[0]
+        }); else res.status(200).json({
+          success : true,
+          msg : "아이디 생성 가능함",
+          value : email
+        });
       } catch (err) {
-        res.status(400).json("db에 id가 있는지 확인 중 err발생 => "+err)
+        res.status(400).json("db에 id가 있는지 확인 중 err발생 => \n"+err)
       }
-      const salt = crypto.randomBytes(128).toString('base64');
-      const hashPassword:any = crypto.createHash('sha512').update(password + salt).digest('hex');
-      password = hashPassword;
-      // const user = await User.create({ email, password, name, id, salt })
-      // res.status(200).json(user)
+      //보안을 위해서 단방향 암호화를 사용
+      //입력 pwd + salt를 해시 알고리즘을 사용해서 다이제스트를 구함
+      const salt = await createSalt(); // 소금 만들어서 대입
+      const password = await createHashPassword(inputPassword, salt, 64, 14582);
+
+      await User.create({ email, password, name, nickname, salt })
+      .then(console.log)
+      .then(v => res.status(200).json(v))
+      .catch(v => {
+        console.log("db에 user 정보를 생성 중 err발생 => \n" + v);
+        res.status(400).json({
+          success : true,
+          msg : "db에 계정을 생성 중 err 발생",
+          value : v
+        })
+      })
     } catch (err) {
-      res.status(400).json({ message: "BAD_REQUEST => ", err })
+      res.status(400).json("계정을 생성 중 err발생 => \n"+err)
     }
   },
 
@@ -105,9 +140,4 @@ const process = {
 
 module.exports = {
   process,
-}
-
-module.exports = {
-  process,
-
 }
