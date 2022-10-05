@@ -78,12 +78,14 @@ const processing = {
     try {
       const { email, inputString } = req.body
       //SELECT randomstring from user_auth_tb
-      const user = await UserAuth.findAll({ 
+      let user:string = "";
+      await UserAuth.findAll({ 
         attributes : ['randomstring'],
         where:{
         email : email
-      } })
-      //인증번호 값이 존재하지 않는다면 실패함을 알려줌
+      } }).then(v=> user = v[0].randomstring)
+      .catch(v=> console.log(v));
+      // 인증번호 값이 존재하지 않는다면 실패함을 알려줌
       if(!user) return res.status(409).json({ message : "해당 email에 randomString을 찾을 수 없음 "});
       if( user == inputString ) {
         await UserAuth.destroy({
@@ -93,6 +95,7 @@ const processing = {
         }).then(v => console.log("정상적으로 지워짐"))
         .then( v => res.status(200).json({ message : "이메일 인증 완료"}))
         .catch(v => console.log("인증번호 지우는 과정에서 오류 발생 => \n" + v))
+        
       }
     } catch (err) {
       res.status(400).json({ message: "BAD_REQUEST" })

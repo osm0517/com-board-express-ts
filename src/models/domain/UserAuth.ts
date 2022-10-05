@@ -22,7 +22,6 @@ UserAuth.init(
     },
     email: {
       type: DataTypes.STRING(120),
-      unique: true,
       allowNull: false,
     },
     randomstring: {
@@ -31,7 +30,7 @@ UserAuth.init(
     }
   },
   {
-    modelName: "User",
+    modelName: "UserAuth",
     tableName: "user_auth_tb",
     sequelize,
     freezeTableName: true,
