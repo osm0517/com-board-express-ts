@@ -18,7 +18,7 @@ router.get("/auth/email/send", ctrl.processing.send)
 
 // router.delete("/delete", ctrl.process.delete)
 
-// router.post("/test", ctrl.process.test)
+router.get("/test", ctrl.processing.test)
 
 module.exports = router
 export {}
