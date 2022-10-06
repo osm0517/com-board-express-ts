@@ -4,7 +4,14 @@ import { Board } from "../../models/domain/Board";
 import sequelize from "../../models";
 const crypto = require('crypto');
 
-
+const createHashPassword = (pwd:String, salt:String, len:Number, iteration:Number):Promise<string> => {
+  return new Promise(async (res, rej) => {
+    crypto.pbkdf2(pwd, salt, iteration, len, 'sha512', (err:String, key:any) => {
+      if (err) rej(err);
+      res(key.toString('base64'));
+    });
+  });
+};
 
 const process = {
   signup : async (req:Request, res:Response) => {
@@ -35,12 +42,27 @@ const process = {
   login : async (req:Request, res:Response) => {
     try {
       const { email, password } = req.body
-      const user = await User.findOne({ where:{
-        email : email,
-        password : password
-      } })
-      if(user) res.status(200).json(user);
-      else res.status(200).json({ msg : "회원정보 없음" });
+      //db에 저장된 패스워드를 찾음
+      let dbPassword:string = "";
+      let dbSalt:string = "";
+      await User.findAll({ 
+        attributes : ['salt', 'password'],
+        where:{email : email} 
+      }).then(v => {
+        dbPassword = v[0].password;
+        dbSalt = v[0].salt;
+      }).then(v=> console.log("db에서 값 정상적으로 가져옴"))
+      .catch(v => {
+        res.status(400).json({message : `db에서 값을 가져오는 중 에러 발생 => \n${v}`})
+      })
+      //변수에 값이 저장되지 않았다면 오류를 반환
+      if(!dbPassword) return res.status(409).json({
+        message : "db에 해당하는 이메일이 존재하지 않음"
+      });
+      //대조를 위해서 password를 만듦
+      const createPassword = await createHashPassword(password, dbSalt, 64, 14582);
+      if(dbPassword === createPassword) return res.status(200).json({message : "로그인 성공"});
+      res.status(400).json({message : "비밀번호가 틀립니다"})
     } catch (err) {
       res.status(400).json({ message: "BAD_REQUEST" })
     }
