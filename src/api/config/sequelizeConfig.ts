@@ -1,10 +1,10 @@
 const config = {
   development: {
-    username: "",
-    password: "",
-    database: "",
-    host: "",
-    dialect: "",
+    username: "root",
+    password: "kt1079616",
+    database: "comboardtest",
+    host: "localhost",
+    dialect: "mysql",
   },
 }
 

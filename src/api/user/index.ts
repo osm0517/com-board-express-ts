@@ -10,7 +10,7 @@ router.get("/auth/email", ctrl.processing.auth)
 //인증 이메일 발송(22.10.04 test)
 router.get("/auth/email/send", ctrl.processing.send)
 //로그인
-// router.post("/login", ctrl.process.login)
+// router.get("/login", ctrl.process.login)
 // //정보 찾기
 // router.post("/search/:type", ctrl.process.search)
 // //정보 변경
