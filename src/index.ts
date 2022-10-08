@@ -18,8 +18,11 @@ const swaggerSpec = YAML.load(
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+//백과 프론트 간 통신에서 cors error를 방지해줌
 app.use(cors())
+//cookie 값을 가져올 수 있음
 app.use(cookieParser())
+//passport 초기화 모듈
 app.use(passport.initialize())
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))

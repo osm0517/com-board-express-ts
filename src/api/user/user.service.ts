@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { User } from "../../models/domain/User";
 import { Board } from "../../models/domain/Board";
 import sequelize from "../../models";
+import passport from "passport";
+import jwt from 'jsonwebtoken';
 const crypto = require('crypto');
 
 const createHashPassword = (pwd:String, salt:String, len:Number, iteration:Number):Promise<string> => {
@@ -41,6 +43,39 @@ const process = {
 
   login : async (req:Request, res:Response) => {
     try {
+      //기본적으로 인증에 성공하면 session을 생성함
+      passport.authenticate('local', { session: false }, (err, user) => {
+        // passport-local 결과에서 Err가 있거나, 유저가 없을 때
+        if (err) return res.status(400).json({message: `로그인 중 err발생 => ${err}`})
+        else if (!user) return res.redirect('/login')
+        // 로그인 후 코드 작성
+        req.login(user, { session: false }, (err) => {
+          // err 있을 때 처리
+          if (err) {
+            console.log("passport를 이용하여 login을 처리하는 중 err발생 => " +err)
+            return res.status(400).json({ message : `passport를 이용하여 login을 처리하는 중 err발생 =>${err}`})
+          }
+          // jwt를 이용하여 token을 생성
+          //123은 시크릿키 바꿔야함
+          const token = jwt.sign({ idx: user.idx }, '123')
+          
+          // cookie에 accessToken에 token을 담아서 저장
+          res.cookie('accessToken', token, {
+            expires: new Date(Date.now() + 86400e3),
+            /*보안정책상 가장 강력
+            * 강력 -> 위험
+            * strict
+            * lax
+            * none
+            * */
+            sameSite: 'strict',
+          })
+          
+          // user 정보 리턴
+          return res.send({ user })
+        })
+      })(req, res)
+
       const { email, password } = req.body
       //db에 저장된 패스워드를 찾음
       let dbPassword:string = "";
