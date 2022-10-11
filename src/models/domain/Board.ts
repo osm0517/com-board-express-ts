@@ -7,11 +7,10 @@ import { User } from "./User"
 
 export class Board extends Model<BoardAttributes> {
   public readonly id!: number
-  public readonly userId!: number
-  public readonly categoryId!: number
-  public readonly stackId!: number
-  public readonly title!: string
-  public readonly text!: string
+  public userId!: number
+  public categoryId!: number
+  public stackId!: number
+  public title!: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -46,14 +45,10 @@ Board.init(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    text: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
   },
   {
     modelName: "Board",
-    tableName: "tbl_board",
+    tableName: "board_tb",
     sequelize,
     freezeTableName: true,
   }

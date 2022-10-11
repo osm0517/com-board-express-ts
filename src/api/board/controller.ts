@@ -1,24 +1,30 @@
 import { Request, Response } from "express"
 import { Board } from "../../models/domain/Board"
+import { BoardText } from "../../models/domain/Board_text"
 import {Op} from 'sequelize'
 
 const process = {
-//   write : async (req:Request, res:Response) => {
-//     const {title, writer} = req.body;
-//     try {
-//       await Board.create({
-//         title : title,
-//         writer : writer
-//       }).then(console.log)
-//       .then(v => res.json({
-//         mag : "writeSuccess",
-//         success : true
-//       }))
-//       .catch(err => console.log(err))
-//     } catch (err) {
-//       res.status(400).json({msg : "write 중 catch에서 걸림"})
-//     }
-//   },
+  write : async (req:Request, res:Response) => {
+    const {title, userId, categoryId, stackId, text} = req.body;
+    try {
+      const writeInfo = await Board.create({
+        userId : userId,
+        categoryId : categoryId,
+        stackId : stackId,
+        title: title,
+      })
+      if(!writeInfo) return res.status(400).json({message : `db에 정상적으로 게시물 정보가 생성되지 않음`})
+      
+      const writeText = await BoardText.create({
+        boardText : text,
+        boardId : writeInfo.id
+      })
+      if(!writeText) return res.status(400).json({message : `db에 정상적으로 게시물 내용이 생성되지 않음`})
+      res.status(200).json({message : `db에 정상적으로 게시물 정보가 생성됨`})
+    } catch (err) {
+      res.status(400).json({msg : `write 중 catch에서 걸림${err}`})
+    }
+  },
 //   //파라미터 정보를 이용해서 원하는 정보만 보냄
 //   read : async (req:Request, res:Response) => {
 //     const {page} = req.params;

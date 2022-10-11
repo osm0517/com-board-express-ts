@@ -4,5 +4,4 @@ export interface BoardAttributes {
   categoryId?: number
   stackId?: number
   title: string
-  text: string
 }

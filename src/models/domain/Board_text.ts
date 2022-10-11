@@ -5,8 +5,8 @@ import { Board } from "./Board"
 
 export class BoardText extends Model<BoardTextAttributes> {
   public readonly id!: number
-  public readonly boardId!: number
-  public readonly text!: string
+  public  boardId!: number
+  public  boardText!: string
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -27,14 +27,14 @@ BoardText.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    text: {
+    boardText: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
   },
   {
     modelName: "Board",
-    tableName: "tbl_board",
+    tableName: "board_text_tb",
     sequelize,
     freezeTableName: true,
   }
