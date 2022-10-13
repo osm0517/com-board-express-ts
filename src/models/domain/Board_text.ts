@@ -20,7 +20,6 @@ BoardText.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
       primaryKey: true,
     },
     boardId: {
@@ -41,11 +40,11 @@ BoardText.init(
 )
 Board.hasMany(BoardText, {
   sourceKey: "id",
-  foreignKey: "boardId",
+  foreignKey: "id",
   as: "userBoardId",
 })
 
 BoardText.belongsTo(Board, {
-  foreignKey: "boardId",
+  foreignKey: "id",
   as: "userBoardId",
 })
