@@ -6,8 +6,8 @@ import { User } from "./User"
 
 export class Scrap extends Model<ScrapAttributes> {
   public readonly id!: number
-  public readonly userId!: number
-  public readonly boardId!: number
+  public  userId!: number
+  public  boardId!: number
 
   public readonly createdAt!: Date
   public readonly updatedAt!: Date
@@ -36,7 +36,7 @@ Scrap.init(
   },
   {
     modelName: "Scrap",
-    tableName: "tbl_board_scrap",
+    tableName: "board_scrap_tb",
     sequelize,
     freezeTableName: true,
   }
